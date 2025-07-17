@@ -1,82 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Twilio Call</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f9fafb;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 100px;
-    }
+<h2>Connect Two Numbers</h2>
+<input type="text" id="caller" placeholder="Your Number (e.g. +91XXXX)" />
+<input type="text" id="callee" placeholder="Other Number (e.g. +91YYYY)" />
+<button onclick="connectCall()">Connect</button>
 
-    h2 {
-      color: #4f46e5;
-    }
+<script>
+  async function connectCall() {
+    const from = document.getElementById("caller").value.trim();
+    const to = document.getElementById("callee").value.trim();
 
-    input {
-      padding: 10px;
-      margin: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      width: 250px;
-    }
+    try {
+      const res = await fetch("https://twilio-n5ls.onrender.com/call", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          fromNumber: from,
+          toNumber: to
+        })
+      });
 
-    button {
-      background-color: #4f46e5;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    button:hover {
-      background-color: #4338ca;
-    }
-  </style>
-</head>
-<body>
-  <h2>📞 Make a Call</h2>
-  <input type="text" id="countryCode" placeholder="Country Code (e.g., +91)" />
-  <input type="text" id="phoneNumber" placeholder="Phone Number" />
-  <button onclick="makeCall()">Call</button>
-
-  <script>
-    async function makeCall() {
-      const code = document.getElementById("countryCode").value.trim();
-      const number = document.getElementById("phoneNumber").value.trim();
-      const fullNumber = code + number;
-
-      if (!fullNumber.startsWith('+')) {
-        alert("⚠️ Phone number must start with +");
-        return;
+      const data = await res.json();
+      if (res.ok) {
+        alert("📞 Call started. You'll get a call shortly.");
+      } else {
+        alert("❌ Error: " + data.error);
       }
-
-      try {
-        const res = await fetch("https://twilio-n5ls.onrender.com/call", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ phoneNumber: fullNumber })
-        });
-
-        const data = await res.json();
-        if (res.ok) {
-          alert("✅ Call initiated! SID: " + data.sid);
-        } else {
-          alert("❌ Error: " + data.error);
-        }
-      } catch (err) {
-        console.error("Fetch error:", err);
-        alert("Something went wrong. Check the console.");
-      }
+    } catch (err) {
+      console.error("Fetch error:", err);
+      alert("Something went wrong. Check console.");
     }
-  </script>
-</body>
-</html>
+  }
+</script>
