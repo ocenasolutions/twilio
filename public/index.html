@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Twilio Call App</title>
+  <meta charset="UTF-8">
+  <title>Twilio Call</title>
   <style>
     body {
-      font-family: sans-serif;
-      background-color: #f2f2f2;
+      font-family: Arial, sans-serif;
+      background: #f9fafb;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -14,43 +14,37 @@
     }
 
     h2 {
-      color: #333;
+      color: #4f46e5;
     }
 
-    input, button {
+    input {
       padding: 10px;
       margin: 10px;
-      border-radius: 5px;
       border: 1px solid #ccc;
-      font-size: 16px;
+      border-radius: 5px;
+      width: 250px;
     }
 
     button {
-      background-color: #28a745;
+      background-color: #4f46e5;
       color: white;
-      cursor: pointer;
+      padding: 10px 20px;
       border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
     }
 
     button:hover {
-      background-color: #218838;
-    }
-
-    .container {
-      background: white;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      background-color: #4338ca;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>📞 Twilio Call</h2>
-    <input type="text" id="countryCode" placeholder="+91" />
-    <input type="text" id="phoneNumber" placeholder="Phone Number" />
-    <button onclick="makeCall()">Call</button>
-  </div>
+  <h2>📞 Make a Call</h2>
+  <input type="text" id="countryCode" placeholder="Country Code (e.g., +91)" />
+  <input type="text" id="phoneNumber" placeholder="Phone Number" />
+  <button onclick="makeCall()">Call</button>
 
   <script>
     async function makeCall() {
@@ -59,12 +53,12 @@
       const fullNumber = code + number;
 
       if (!fullNumber.startsWith('+')) {
-        alert("Phone number must start with + (country code)");
+        alert("⚠️ Phone number must start with +");
         return;
       }
 
       try {
-        const res = await fetch("http://localhost:3000/call", {
+        const res = await fetch("https://twilio-n5ls.onrender.com/call", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -74,7 +68,7 @@
 
         const data = await res.json();
         if (res.ok) {
-          alert("✅ Call started! SID: " + data.sid);
+          alert("✅ Call initiated! SID: " + data.sid);
         } else {
           alert("❌ Error: " + data.error);
         }
