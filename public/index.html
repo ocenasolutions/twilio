@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Twilio Call App</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f2f2f2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 100px;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #28a745;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>📞 Twilio Call</h2>
+    <input type="text" id="countryCode" placeholder="+91" />
+    <input type="text" id="phoneNumber" placeholder="Phone Number" />
+    <button onclick="makeCall()">Call</button>
+  </div>
+
+  <script>
+    async function makeCall() {
+      const code = document.getElementById("countryCode").value.trim();
+      const number = document.getElementById("phoneNumber").value.trim();
+      const fullNumber = code + number;
+
+      if (!fullNumber.startsWith('+')) {
+        alert("Phone number must start with + (country code)");
+        return;
+      }
+
+      try {
+        const res = await fetch("http://localhost:3000/call", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ phoneNumber: fullNumber })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          alert("✅ Call started! SID: " + data.sid);
+        } else {
+          alert("❌ Error: " + data.error);
+        }
+      } catch (err) {
+        console.error("Fetch error:", err);
+        alert("Something went wrong. Check the console.");
+      }
+    }
+  </script>
+</body>
+</html>
