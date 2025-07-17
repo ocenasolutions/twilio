@@ -1,34 +1,42 @@
 const express = require('express');
+const { urlencoded } = require('body-parser');
 const path = require('path');
-const bodyParser = require('body-parser');
-const { twiml: { VoiceResponse } } = require('twilio');
-const twilio = require('twilio');
+const cors = require('cors');
 require('dotenv').config();
+const twilio = require('twilio');
 
 const app = express();
-app.use(bodyParser.json());
+app.use(cors());
+app.use(urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH);
+const VoiceResponse = twilio.twiml.VoiceResponse;
 
-app.post('/call', async (req, res) => {
-  const { fromNumber, toNumber } = req.body;
+const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_API_KEY, TWILIO_API_SECRET, TWIML_APP_SID } = process.env;
 
-  try {
-    const call = await client.calls.create({
-      twiml: `<Response><Dial>${toNumber}</Dial></Response>`,
-      to: fromNumber,
-      from: process.env.TWILIO_PHONE
-    });
+// Generate capability token
+app.get('/token', (req, res) => {
+  const capability = new twilio.jwt.ClientCapability({
+    accountSid: TWILIO_ACCOUNT_SID,
+    authToken: TWILIO_AUTH_TOKEN,
+  });
 
-    res.json({ success: true, sid: call.sid });
-  } catch (error) {
-    console.error('Call error:', error);
-    res.status(500).json({ error: error.message });
-  }
+  capability.addScope(
+    new twilio.jwt.ClientCapability.OutgoingClientScope({ applicationSid: TWIML_APP_SID })
+  );
+  capability.addScope(new twilio.jwt.ClientCapability.IncomingClientScope('browser'));
+
+  res.send({ token: capability.toJwt() });
+});
+
+// Handle voice call
+app.post('/voice', (req, res) => {
+  const twiml = new VoiceResponse();
+  const dial = twiml.dial();
+  dial.number(req.body.To);
+  res.type('text/xml');
+  res.send(twiml.toString());
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
