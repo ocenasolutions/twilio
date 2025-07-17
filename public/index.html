@@ -1,38 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Connect Call</title>
+  <title>Twilio Call App</title>
+  <script src="https://sdk.twilio.com/js/client/v1.13/twilio.min.js"></script>
 </head>
 <body>
-  <h2>Connect Two Numbers</h2>
-  <input type="text" id="caller" placeholder="Your Number (e.g. +91XXXX)" />
-  <input type="text" id="callee" placeholder="Other Number (e.g. +91YYYY)" />
-  <button onclick="connectCall()">Connect</button>
+  <h1>Twilio Browser Calling</h1>
+
+  <input type="text" id="number" placeholder="Enter phone number (e.g. +256...)"/>
+  <button onclick="makeCall()">Call</button>
+  <button onclick="hangup()">Hang Up</button>
 
   <script>
-    async function connectCall() {
-      const from = document.getElementById("caller").value.trim();
-      const to = document.getElementById("callee").value.trim();
+    let device;
 
-      try {
-        const res = await fetch("/call", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ fromNumber: from, toNumber: to })
+    fetch('/token')
+      .then(res => res.json())
+      .then(data => {
+        device = new Twilio.Device(data.token, {
+          codecPreferences: ['opus', 'pcmu'],
+          fakeLocalDTMF: true,
+          enableRingingState: true
         });
 
-        const data = await res.json();
-        if (res.ok) {
-          alert("📞 Call started! You’ll receive a call shortly.");
-        } else {
-          alert("❌ Error: " + data.error);
-        }
-      } catch (err) {
-        console.error("Fetch error:", err);
-        alert("Something went wrong.");
+        device.on('ready', () => console.log('Device is ready'));
+        device.on('error', error => console.error('Twilio Error:', error));
+        device.on('disconnect', call => console.log('Call disconnected'));
+      });
+
+    function makeCall() {
+      const number = document.getElementById('number').value;
+      if (device) {
+        device.connect({ To: number });
+      }
+    }
+
+    function hangup() {
+      if (device) {
+        device.disconnectAll();
       }
     }
   </script>
