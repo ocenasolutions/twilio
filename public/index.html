@@ -1,34 +1,40 @@
-<h2>Connect Two Numbers</h2>
-<input type="text" id="caller" placeholder="Your Number (e.g. +91XXXX)" />
-<input type="text" id="callee" placeholder="Other Number (e.g. +91YYYY)" />
-<button onclick="connectCall()">Connect</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Connect Call</title>
+</head>
+<body>
+  <h2>Connect Two Numbers</h2>
+  <input type="text" id="caller" placeholder="Your Number (e.g. +91XXXX)" />
+  <input type="text" id="callee" placeholder="Other Number (e.g. +91YYYY)" />
+  <button onclick="connectCall()">Connect</button>
 
-<script>
-  async function connectCall() {
-    const from = document.getElementById("caller").value.trim();
-    const to = document.getElementById("callee").value.trim();
+  <script>
+    async function connectCall() {
+      const from = document.getElementById("caller").value.trim();
+      const to = document.getElementById("callee").value.trim();
 
-    try {
-      const res = await fetch("https://twilio-n5ls.onrender.com/call", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          fromNumber: from,
-          toNumber: to
-        })
-      });
+      try {
+        const res = await fetch("/call", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ fromNumber: from, toNumber: to })
+        });
 
-      const data = await res.json();
-      if (res.ok) {
-        alert("📞 Call started. You'll get a call shortly.");
-      } else {
-        alert("❌ Error: " + data.error);
+        const data = await res.json();
+        if (res.ok) {
+          alert("📞 Call started! You’ll receive a call shortly.");
+        } else {
+          alert("❌ Error: " + data.error);
+        }
+      } catch (err) {
+        console.error("Fetch error:", err);
+        alert("Something went wrong.");
       }
-    } catch (err) {
-      console.error("Fetch error:", err);
-      alert("Something went wrong. Check console.");
     }
-  }
-</script>
+  </script>
+</body>
+</html>
