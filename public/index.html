@@ -1,45 +1,504 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Twilio Call App</title>
-  <script src="https://sdk.twilio.com/js/client/v1.13/twilio.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twilio Voice Calling App</title>
+    <script src="https://sdk.twilio.com/js/client/v1.13/twilio.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        
+        .phone-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 18px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        
+        .phone-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .country-code {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .country-code select {
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            background: white;
+            flex: 1;
+        }
+        
+        .country-code input {
+            flex: 2;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-call {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-call:hover:not(:disabled) {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+        
+        .btn-hangup {
+            background: #f44336;
+            color: white;
+        }
+        
+        .btn-hangup:hover:not(:disabled) {
+            background: #da190b;
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .status.ready {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.calling {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status.connected {
+            background: #cce5ff;
+            color: #004085;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status.disconnected {
+            background: #f8f9fa;
+            color: #6c757d;
+        }
+        
+        .call-logs {
+            margin-top: 30px;
+            text-align: left;
+        }
+        
+        .call-logs h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .call-log {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .volume-control {
+            margin: 20px 0;
+        }
+        
+        .volume-control label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .volume-control input {
+            width: 100%;
+        }
+        
+        .connection-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background: #ccc;
+        }
+        
+        .connection-indicator.connected {
+            background: #4CAF50;
+        }
+        
+        .connection-indicator.disconnected {
+            background: #f44336;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .country-code {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>Twilio Browser Calling</h1>
+    <div class="container">
+        <h1>📞 Voice Calling App</h1>
+        
+        <div class="status ready" id="status">
+            <span class="connection-indicator" id="indicator"></span>
+            <span id="statusText">Initializing...</span>
+        </div>
+        
+        <div class="country-code">
+            <select id="countryCode">
+                <option value="+1">🇺🇸 +1 (US/Canada)</option>
+                <option value="+44">🇬🇧 +44 (UK)</option>
+                <option value="+91">🇮🇳 +91 (India)</option>
+                <option value="+86">🇨🇳 +86 (China)</option>
+                <option value="+49">🇩🇪 +49 (Germany)</option>
+                <option value="+33">🇫🇷 +33 (France)</option>
+                <option value="+81">🇯🇵 +81 (Japan)</option>
+                <option value="+61">🇦🇺 +61 (Australia)</option>
+                <option value="+55">🇧🇷 +55 (Brazil)</option>
+                <option value="+7">🇷🇺 +7 (Russia)</option>
+                <option value="+39">🇮🇹 +39 (Italy)</option>
+                <option value="+34">🇪🇸 +34 (Spain)</option>
+                <option value="+82">🇰🇷 +82 (South Korea)</option>
+                <option value="+52">🇲🇽 +52 (Mexico)</option>
+                <option value="+27">🇿🇦 +27 (South Africa)</option>
+                <option value="+256">🇺🇬 +256 (Uganda)</option>
+                <option value="+254">🇰🇪 +254 (Kenya)</option>
+                <option value="+234">🇳🇬 +234 (Nigeria)</option>
+                <option value="+20">🇪🇬 +20 (Egypt)</option>
+                <option value="+971">🇦🇪 +971 (UAE)</option>
+            </select>
+            <input type="tel" id="phoneNumber" class="phone-input" placeholder="Enter phone number (e.g., 1234567890)" maxlength="15">
+        </div>
+        
+        <div class="button-group">
+            <button class="btn btn-call" id="callBtn" onclick="makeCall()">
+                📞 Call
+            </button>
+            <button class="btn btn-hangup" id="hangupBtn" onclick="hangup()" disabled>
+                📞 Hang Up
+            </button>
+        </div>
+        
+        <div class="volume-control">
+            <label for="volumeControl">🔊 Volume Control</label>
+            <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="1">
+        </div>
+        
+        <div class="call-logs">
+            <h3>📋 Call History</h3>
+            <div id="callLogs"></div>
+        </div>
+    </div>
 
-  <input type="text" id="number" placeholder="Enter phone number (e.g. +256...)"/>
-  <button onclick="makeCall()">Call</button>
-  <button onclick="hangup()">Hang Up</button>
-
-  <script>
-    let device;
-
-    fetch('/token')
-      .then(res => res.json())
-      .then(data => {
-        device = new Twilio.Device(data.token, {
-          codecPreferences: ['opus', 'pcmu'],
-          fakeLocalDTMF: true,
-          enableRingingState: true
+    <script>
+        let device;
+        let currentCall = null;
+        let callLogs = [];
+        
+        // Initialize the application
+        async function initializeApp() {
+            try {
+                updateStatus('Connecting to Twilio...', 'calling');
+                
+                const response = await fetch('/token');
+                const data = await response.json();
+                
+                if (!data.token) {
+                    throw new Error('No token received');
+                }
+                
+                // Initialize Twilio Device
+                device = new Twilio.Device(data.token, {
+                    codecPreferences: ['opus', 'pcmu'],
+                    fakeLocalDTMF: true,
+                    enableRingingState: true,
+                    enableImprovedSignalingErrorPrecision: true
+                });
+                
+                // Device event handlers
+                device.on('ready', () => {
+                    console.log('Twilio Device is ready');
+                    updateStatus('Ready to make calls', 'ready');
+                    document.getElementById('callBtn').disabled = false;
+                    document.getElementById('indicator').className = 'connection-indicator connected';
+                });
+                
+                device.on('error', (error) => {
+                    console.error('Twilio Device Error:', error);
+                    updateStatus(`Error: ${error.message}`, 'error');
+                    document.getElementById('indicator').className = 'connection-indicator disconnected';
+                });
+                
+                device.on('connect', (call) => {
+                    console.log('Call connected');
+                    currentCall = call;
+                    updateStatus('Call connected - You can now talk!', 'connected');
+                    document.getElementById('callBtn').disabled = true;
+                    document.getElementById('hangupBtn').disabled = false;
+                    
+                    // Add to call logs
+                    const phoneNumber = document.getElementById('phoneNumber').value;
+                    const countryCode = document.getElementById('countryCode').value;
+                    const fullNumber = countryCode + phoneNumber;
+                    
+                    addToCallLog(fullNumber, 'Connected', new Date());
+                });
+                
+                device.on('disconnect', (call) => {
+                    console.log('Call disconnected');
+                    currentCall = null;
+                    updateStatus('Call disconnected', 'disconnected');
+                    document.getElementById('callBtn').disabled = false;
+                    document.getElementById('hangupBtn').disabled = true;
+                    
+                    // Update call log
+                    if (callLogs.length > 0) {
+                        callLogs[0].endTime = new Date();
+                        callLogs[0].status = 'Disconnected';
+                        updateCallLogsDisplay();
+                    }
+                });
+                
+                device.on('incoming', (call) => {
+                    console.log('Incoming call from:', call.parameters.From);
+                    const answer = confirm(`Incoming call from ${call.parameters.From}. Accept?`);
+                    if (answer) {
+                        call.accept();
+                    } else {
+                        call.reject();
+                    }
+                });
+                
+                // Volume control
+                document.getElementById('volumeControl').addEventListener('input', (e) => {
+                    if (currentCall) {
+                        currentCall.volume(parseFloat(e.target.value));
+                    }
+                });
+                
+                // Load call history
+                loadCallHistory();
+                
+            } catch (error) {
+                console.error('Initialization error:', error);
+                updateStatus(`Initialization failed: ${error.message}`, 'error');
+                document.getElementById('indicator').className = 'connection-indicator disconnected';
+            }
+        }
+        
+        function makeCall() {
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+            const countryCode = document.getElementById('countryCode').value;
+            
+            if (!phoneNumber) {
+                alert('Please enter a phone number');
+                return;
+            }
+            
+            if (!/^\d+$/.test(phoneNumber)) {
+                alert('Please enter a valid phone number (numbers only)');
+                return;
+            }
+            
+            const fullNumber = countryCode + phoneNumber;
+            
+            if (!device) {
+                alert('Device not ready. Please wait and try again.');
+                return;
+            }
+            
+            try {
+                console.log('Making call to:', fullNumber);
+                updateStatus(`Calling ${fullNumber}...`, 'calling');
+                
+                // Make the call
+                device.connect({ To: fullNumber });
+                
+                document.getElementById('callBtn').disabled = true;
+                
+            } catch (error) {
+                console.error('Error making call:', error);
+                updateStatus(`Call failed: ${error.message}`, 'error');
+                document.getElementById('callBtn').disabled = false;
+            }
+        }
+        
+        function hangup() {
+            if (device && currentCall) {
+                console.log('Hanging up call');
+                device.disconnectAll();
+            }
+        }
+        
+        function updateStatus(message, type) {
+            const statusElement = document.getElementById('status');
+            const statusText = document.getElementById('statusText');
+            
+            statusText.textContent = message;
+            statusElement.className = `status ${type}`;
+            
+            console.log('Status:', message);
+        }
+        
+        function addToCallLog(number, status, startTime) {
+            const log = {
+                number: number,
+                status: status,
+                startTime: startTime,
+                endTime: null
+            };
+            
+            callLogs.unshift(log);
+            
+            // Keep only last 10 calls
+            if (callLogs.length > 10) {
+                callLogs = callLogs.slice(0, 10);
+            }
+            
+            updateCallLogsDisplay();
+        }
+        
+        function updateCallLogsDisplay() {
+            const callLogsContainer = document.getElementById('callLogs');
+            
+            if (callLogs.length === 0) {
+                callLogsContainer.innerHTML = '<p>No calls yet</p>';
+                return;
+            }
+            
+            const logsHTML = callLogs.map(log => {
+                const duration = log.endTime ? 
+                    Math.round((log.endTime - log.startTime) / 1000) + 's' : 
+                    'Ongoing';
+                
+                return `
+                    <div class="call-log">
+                        <strong>${log.number}</strong><br>
+                        Status: ${log.status}<br>
+                        Time: ${log.startTime.toLocaleTimeString()}<br>
+                        Duration: ${duration}
+                    </div>
+                `;
+            }).join('');
+            
+            callLogsContainer.innerHTML = logsHTML;
+        }
+        
+        async function loadCallHistory() {
+            try {
+                const response = await fetch('/api/calls');
+                const calls = await response.json();
+                
+                // Convert to our format
+                const historyLogs = calls.map(call => ({
+                    number: call.to,
+                    status: call.status,
+                    startTime: new Date(call.startTime),
+                    endTime: call.endTime ? new Date(call.endTime) : null
+                }));
+                
+                callLogs = [...callLogs, ...historyLogs];
+                updateCallLogsDisplay();
+                
+            } catch (error) {
+                console.error('Error loading call history:', error);
+            }
+        }
+        
+        // Handle Enter key in phone number input
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('phoneNumber').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    makeCall();
+                }
+            });
         });
-
-        device.on('ready', () => console.log('Device is ready'));
-        device.on('error', error => console.error('Twilio Error:', error));
-        device.on('disconnect', call => console.log('Call disconnected'));
-      });
-
-    function makeCall() {
-      const number = document.getElementById('number').value;
-      if (device) {
-        device.connect({ To: number });
-      }
-    }
-
-    function hangup() {
-      if (device) {
-        device.disconnectAll();
-      }
-    }
-  </script>
+        
+        // Initialize when page loads
+        window.addEventListener('load', initializeApp);
+        
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden && currentCall) {
+                console.log('Page hidden, call may be affected');
+            }
+        });
+    </script>
 </body>
 </html>
