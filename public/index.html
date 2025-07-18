@@ -13,207 +13,635 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="g" cx="50%" cy="50%" r="50%"><stop offset="0%" style="stop-color:rgba(255,255,255,0.1);stop-opacity:1" /><stop offset="100%" style="stop-color:rgba(255,255,255,0);stop-opacity:0" /></radialGradient></defs><circle cx="50" cy="50" r="50" fill="url(%23g)"/></svg>') center/100px 100px;
+            pointer-events: none;
+            z-index: -1;
         }
         
         .container {
-            background: white;
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
             padding: 40px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.1);
             width: 100%;
-            max-width: 500px;
+            max-width: 480px;
             text-align: center;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            border-radius: 24px;
+            pointer-events: none;
         }
         
         h1 {
-            color: #333;
+            color: #2d3748;
             margin-bottom: 30px;
             font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 1;
         }
         
         .phone-input {
             width: 100%;
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            font-size: 18px;
+            padding: 16px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            font-size: 16px;
             margin-bottom: 20px;
-            transition: border-color 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            color: #2d3748;
+            position: relative;
+            z-index: 1;
         }
         
         .phone-input:focus {
             outline: none;
             border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
         }
         
         .country-code {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 20px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
         }
         
         .country-code select {
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            font-size: 16px;
-            background: white;
+            padding: 16px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
             flex: 1;
+            color: #2d3748;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .country-code select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
         
         .country-code input {
             flex: 2;
         }
         
+        .custom-code-input {
+            padding: 16px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            font-size: 14px;
+            width: 100px;
+            text-align: center;
+            display: none;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            color: #2d3748;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .custom-code-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
         .button-group {
             display: flex;
-            gap: 15px;
+            gap: 16px;
             margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
         }
         
         .btn {
             flex: 1;
-            padding: 15px;
+            padding: 16px 24px;
             border: none;
-            border-radius: 10px;
+            border-radius: 16px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover:not(:disabled)::before {
+            left: 100%;
         }
         
         .btn-call {
-            background: #4CAF50;
+            background: linear-gradient(135deg, #48bb78, #38a169);
             color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
         
         .btn-call:hover:not(:disabled) {
-            background: #45a049;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
         }
         
         .btn-hangup {
-            background: #f44336;
+            background: linear-gradient(135deg, #f56565, #e53e3e);
             color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
         
         .btn-hangup:hover:not(:disabled) {
-            background: #da190b;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(245, 101, 101, 0.4);
         }
         
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
+            transform: none !important;
         }
         
         .status {
-            padding: 15px;
-            border-radius: 10px;
+            padding: 20px;
+            border-radius: 16px;
             margin-bottom: 20px;
-            font-weight: bold;
-            transition: all 0.3s;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .status.ready {
-            background: #d4edda;
-            color: #155724;
+            background: linear-gradient(135deg, rgba(72, 187, 120, 0.1), rgba(56, 161, 105, 0.1));
+            color: #22543d;
+            border-color: rgba(72, 187, 120, 0.3);
         }
         
         .status.calling {
-            background: #fff3cd;
-            color: #856404;
+            background: linear-gradient(135deg, rgba(237, 137, 54, 0.1), rgba(221, 107, 32, 0.1));
+            color: #744210;
+            border-color: rgba(237, 137, 54, 0.3);
         }
         
         .status.connected {
-            background: #cce5ff;
-            color: #004085;
+            background: linear-gradient(135deg, rgba(66, 153, 225, 0.1), rgba(49, 130, 206, 0.1));
+            color: #2a4365;
+            border-color: rgba(66, 153, 225, 0.3);
         }
         
         .status.error {
-            background: #f8d7da;
-            color: #721c24;
+            background: linear-gradient(135deg, rgba(245, 101, 101, 0.1), rgba(229, 62, 62, 0.1));
+            color: #742a2a;
+            border-color: rgba(245, 101, 101, 0.3);
         }
         
         .status.disconnected {
-            background: #f8f9fa;
-            color: #6c757d;
-        }
-        
-        .call-logs {
-            margin-top: 30px;
-            text-align: left;
-        }
-        
-        .call-logs h3 {
-            margin-bottom: 15px;
-            color: #333;
-        }
-        
-        .call-log {
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            font-size: 14px;
+            background: linear-gradient(135deg, rgba(160, 174, 192, 0.1), rgba(113, 128, 150, 0.1));
+            color: #4a5568;
+            border-color: rgba(160, 174, 192, 0.3);
         }
         
         .volume-control {
             margin: 20px 0;
+            position: relative;
+            z-index: 1;
         }
         
         .volume-control label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #2d3748;
         }
         
-        .volume-control input {
+        .volume-control input[type="range"] {
             width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .volume-control input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .volume-control input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
         
         .connection-indicator {
             display: inline-block;
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
             margin-right: 10px;
-            background: #ccc;
+            background: #cbd5e0;
+            position: relative;
+            animation: pulse 2s infinite;
         }
         
         .connection-indicator.connected {
-            background: #4CAF50;
+            background: #48bb78;
         }
         
         .connection-indicator.disconnected {
-            background: #f44336;
+            background: #f56565;
         }
         
-        @media (max-width: 600px) {
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(72, 187, 120, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(72, 187, 120, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(72, 187, 120, 0);
+            }
+        }
+        
+        .custom-code-label {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 5px;
+            display: none;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Enhanced Call Logs */
+        .call-logs {
+            margin-top: 30px;
+            text-align: left;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .call-logs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 0 5px;
+        }
+        
+        .call-logs h3 {
+            color: #2d3748;
+            font-size: 1.5em;
+            font-weight: 600;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .clear-logs-btn {
+            background: linear-gradient(135deg, #cbd5e0, #a0aec0);
+            color: #4a5568;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .clear-logs-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .call-logs-container {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(102, 126, 234, 0.3) transparent;
+        }
+        
+        .call-logs-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .call-logs-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+        
+        .call-logs-container::-webkit-scrollbar-thumb {
+            background: rgba(102, 126, 234, 0.3);
+            border-radius: 3px;
+        }
+        
+        .call-logs-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(102, 126, 234, 0.5);
+        }
+        
+        .call-log {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 16px;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .call-log::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .call-log:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .call-log:hover::before {
+            left: 100%;
+        }
+        
+        .call-log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .call-log-number {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 16px;
+        }
+        
+        .call-log-status {
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .call-log-status.connected {
+            background: rgba(72, 187, 120, 0.2);
+            color: #22543d;
+        }
+        
+        .call-log-status.disconnected {
+            background: rgba(160, 174, 192, 0.2);
+            color: #4a5568;
+        }
+        
+        .call-log-status.failed {
+            background: rgba(245, 101, 101, 0.2);
+            color: #742a2a;
+        }
+        
+        .call-log-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #718096;
+            font-size: 12px;
+        }
+        
+        .call-log-time {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .call-log-duration {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+        
+        .no-calls {
+            text-align: center;
+            color: #718096;
+            font-style: italic;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            background: rgba(255, 255, 255, 0.4);
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .stat-number {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
             .container {
-                margin: 20px;
-                padding: 20px;
+                margin: 10px;
+                padding: 24px;
+                max-width: 100%;
+            }
+            
+            h1 {
+                font-size: 2em;
+                margin-bottom: 20px;
             }
             
             .button-group {
                 flex-direction: column;
+                gap: 12px;
             }
             
             .country-code {
                 flex-direction: column;
+                gap: 10px;
             }
+            
+            .country-code select {
+                order: 1;
+            }
+            
+            .country-code input {
+                order: 2;
+            }
+            
+            .custom-code-input {
+                width: 100%;
+                order: 1;
+            }
+            
+            .call-logs-container {
+                max-height: 300px;
+            }
+            
+            .call-log {
+                padding: 12px;
+                font-size: 13px;
+            }
+            
+            .call-log-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            
+            .call-log-details {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .phone-input, .country-code select, .custom-code-input {
+                padding: 14px 16px;
+            }
+            
+            .btn {
+                padding: 14px 20px;
+            }
+            
+            .call-logs-container {
+                max-height: 250px;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        * {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📞 Voice Calling App</h1>
+        <h1>📞 Voice Calling</h1>
         
         <div class="status ready" id="status">
             <span class="connection-indicator" id="indicator"></span>
@@ -221,7 +649,7 @@
         </div>
         
         <div class="country-code">
-            <select id="countryCode">
+            <select id="countryCode" onchange="handleCountryCodeChange()">
                 <option value="+1">🇺🇸 +1 (US/Canada)</option>
                 <option value="+44">🇬🇧 +44 (UK)</option>
                 <option value="+91">🇮🇳 +91 (India)</option>
@@ -242,13 +670,19 @@
                 <option value="+234">🇳🇬 +234 (Nigeria)</option>
                 <option value="+20">🇪🇬 +20 (Egypt)</option>
                 <option value="+971">🇦🇪 +971 (UAE)</option>
+                <option value="custom">🌍 Custom Country Code</option>
             </select>
-            <input type="tel" id="phoneNumber" class="phone-input" placeholder="Enter phone number (e.g., 1234567890)" maxlength="15">
+            <input type="text" id="customCountryCode" class="custom-code-input" placeholder="+XXX" maxlength="6">
+            <input type="tel" id="phoneNumber" class="phone-input" placeholder="Enter phone number" maxlength="15">
+        </div>
+        
+        <div class="custom-code-label" id="customCodeLabel">
+            Enter country code with + (e.g., +1, +44, +91)
         </div>
         
         <div class="button-group">
             <button class="btn btn-call" id="callBtn" onclick="makeCall()">
-                📞 Call
+                📞 Call Now
             </button>
             <button class="btn btn-hangup" id="hangupBtn" onclick="hangup()" disabled>
                 📞 Hang Up
@@ -261,8 +695,33 @@
         </div>
         
         <div class="call-logs">
-            <h3>📋 Call History</h3>
-            <div id="callLogs"></div>
+            <div class="call-logs-header">
+                <h3>📋 Call History</h3>
+                <button class="clear-logs-btn" onclick="clearCallLogs()">Clear All</button>
+            </div>
+            
+            <div class="stats-container" id="statsContainer">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalCalls">0</div>
+                    <div class="stat-label">Total</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="connectedCalls">0</div>
+                    <div class="stat-label">Connected</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="failedCalls">0</div>
+                    <div class="stat-label">Failed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalDuration">0s</div>
+                    <div class="stat-label">Duration</div>
+                </div>
+            </div>
+            
+            <div class="call-logs-container" id="callLogsContainer">
+                <div class="no-calls">No calls yet</div>
+            </div>
         </div>
     </div>
 
@@ -271,7 +730,39 @@
         let currentCall = null;
         let callLogs = [];
         
-        // Initialize the application
+        function handleCountryCodeChange() {
+            const countrySelect = document.getElementById('countryCode');
+            const customInput = document.getElementById('customCountryCode');
+            const customLabel = document.getElementById('customCodeLabel');
+            
+            if (countrySelect.value === 'custom') {
+                customInput.style.display = 'block';
+                customLabel.style.display = 'block';
+                customInput.focus();
+            } else {
+                customInput.style.display = 'none';
+                customLabel.style.display = 'none';
+            }
+        }
+        function getCurrentCountryCode() {
+            const countrySelect = document.getElementById('countryCode');
+            const customInput = document.getElementById('customCountryCode');
+            
+            if (countrySelect.value === 'custom') {
+                let customCode = customInput.value.trim();
+                if (customCode && !customCode.startsWith('+')) {
+                    customCode = '+' + customCode;
+                }
+                return customCode;
+            } else {
+                return countrySelect.value;
+            }
+        }
+        function validateCustomCountryCode(code) {
+            if (!code) return false;
+            const regex = /^\+\d{1,5}$/;
+            return regex.test(code);
+        }
         async function initializeApp() {
             try {
                 updateStatus('Connecting to Twilio...', 'calling');
@@ -311,13 +802,11 @@
                     updateStatus('Call connected - You can now talk!', 'connected');
                     document.getElementById('callBtn').disabled = true;
                     document.getElementById('hangupBtn').disabled = false;
-                    
-                    // Add to call logs
                     const phoneNumber = document.getElementById('phoneNumber').value;
-                    const countryCode = document.getElementById('countryCode').value;
+                    const countryCode = getCurrentCountryCode();
                     const fullNumber = countryCode + phoneNumber;
                     
-                    addToCallLog(fullNumber, 'Connected', new Date());
+                    addToCallLog(fullNumber, 'connected', new Date());
                 });
                 
                 device.on('disconnect', (call) => {
@@ -326,12 +815,13 @@
                     updateStatus('Call disconnected', 'disconnected');
                     document.getElementById('callBtn').disabled = false;
                     document.getElementById('hangupBtn').disabled = true;
-                    
-                    // Update call log
                     if (callLogs.length > 0) {
-                        callLogs[0].endTime = new Date();
-                        callLogs[0].status = 'Disconnected';
-                        updateCallLogsDisplay();
+                        const lastCall = callLogs[0];
+                        if (lastCall.status === 'connected') {
+                            lastCall.endTime = new Date();
+                            lastCall.status = 'disconnected';
+                            updateCallLogsDisplay();
+                        }
                     }
                 });
                 
@@ -344,15 +834,11 @@
                         call.reject();
                     }
                 });
-                
-                // Volume control
                 document.getElementById('volumeControl').addEventListener('input', (e) => {
                     if (currentCall) {
                         currentCall.volume(parseFloat(e.target.value));
                     }
                 });
-                
-                // Load call history
                 loadCallHistory();
                 
             } catch (error) {
@@ -364,7 +850,7 @@
         
         function makeCall() {
             const phoneNumber = document.getElementById('phoneNumber').value.trim();
-            const countryCode = document.getElementById('countryCode').value;
+            const countryCode = getCurrentCountryCode();
             
             if (!phoneNumber) {
                 alert('Please enter a phone number');
@@ -374,6 +860,17 @@
             if (!/^\d+$/.test(phoneNumber)) {
                 alert('Please enter a valid phone number (numbers only)');
                 return;
+            }
+            
+            if (!countryCode) {
+                alert('Please select a country code or enter a custom one');
+                return;
+            }
+            if (document.getElementById('countryCode').value === 'custom') {
+                if (!validateCustomCountryCode(countryCode)) {
+                    alert('Please enter a valid country code (e.g., +1, +44, +91)');
+                    return;
+                }
             }
             
             const fullNumber = countryCode + phoneNumber;
@@ -386,8 +883,6 @@
             try {
                 console.log('Making call to:', fullNumber);
                 updateStatus(`Calling ${fullNumber}...`, 'calling');
-                
-                // Make the call
                 device.connect({ To: fullNumber });
                 
                 document.getElementById('callBtn').disabled = true;
@@ -396,6 +891,10 @@
                 console.error('Error making call:', error);
                 updateStatus(`Call failed: ${error.message}`, 'error');
                 document.getElementById('callBtn').disabled = false;
+                const phoneNumber = document.getElementById('phoneNumber').value;
+                const countryCode = getCurrentCountryCode();
+                const fullNumber = countryCode + phoneNumber;
+                addToCallLog(fullNumber, 'failed', new Date());
             }
         }
         
@@ -418,46 +917,139 @@
         
         function addToCallLog(number, status, startTime) {
             const log = {
+                id: Date.now(),
                 number: number,
                 status: status,
                 startTime: startTime,
-                endTime: null
+                endTime: null,
+                duration: 0
             };
             
             callLogs.unshift(log);
-            
-            // Keep only last 10 calls
-            if (callLogs.length > 10) {
-                callLogs = callLogs.slice(0, 10);
+                        if (callLogs.length > 50) {
+                callLogs = callLogs.slice(0, 50);
             }
             
             updateCallLogsDisplay();
+            saveCallLogsToStorage();
         }
         
         function updateCallLogsDisplay() {
-            const callLogsContainer = document.getElementById('callLogs');
+            const callLogsContainer = document.getElementById('callLogsContainer');
             
             if (callLogs.length === 0) {
-                callLogsContainer.innerHTML = '<p>No calls yet</p>';
+                callLogsContainer.innerHTML = '<div class="no-calls">No calls yet</div>';
+                updateCallStats();
                 return;
             }
             
             const logsHTML = callLogs.map(log => {
-                const duration = log.endTime ? 
-                    Math.round((log.endTime - log.startTime) / 1000) + 's' : 
-                    'Ongoing';
+                let duration = '0s';
+                if (log.endTime) {
+                    const durationMs = log.endTime - log.startTime;
+                    duration = formatDuration(durationMs);
+                    log.duration = durationMs;
+                } else if (log.status === 'connected') {
+                    duration = 'Ongoing';
+                }
+                
+                const timeStr = formatTime(log.startTime);
+                const dateStr = formatDate(log.startTime);
                 
                 return `
                     <div class="call-log">
-                        <strong>${log.number}</strong><br>
-                        Status: ${log.status}<br>
-                        Time: ${log.startTime.toLocaleTimeString()}<br>
-                        Duration: ${duration}
+                        <div class="call-log-header">
+                            <span class="call-log-number">${log.number}</span>
+                            <span class="call-log-status ${log.status}">${log.status}</span>
+                        </div>
+                        <div class="call-log-details">
+                            <div class="call-log-time">
+                                <span>🕐 ${timeStr}</span>
+                                <span>📅 ${dateStr}</span>
+                            </div>
+                            <div class="call-log-duration">
+                                <span>⏱️ ${duration}</span>
+                            </div>
+                        </div>
                     </div>
                 `;
             }).join('');
             
             callLogsContainer.innerHTML = logsHTML;
+            updateCallStats();
+        }
+        
+        function updateCallStats() {
+            const totalCalls = callLogs.length;
+            const connectedCalls = callLogs.filter(log => log.status === 'connected' || log.status === 'disconnected').length;
+            const failedCalls = callLogs.filter(log => log.status === 'failed').length;
+            const totalDuration = callLogs.reduce((sum, log) => sum + (log.duration || 0), 0);
+            
+            document.getElementById('totalCalls').textContent = totalCalls;
+            document.getElementById('connectedCalls').textContent = connectedCalls;
+            document.getElementById('failedCalls').textContent = failedCalls;
+            document.getElementById('totalDuration').textContent = formatDuration(totalDuration);
+        }
+        
+        function formatDuration(ms) {
+            const seconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            
+            if (hours > 0) {
+                return `${hours}h ${minutes % 60}m ${seconds % 60}s`;
+            } else if (minutes > 0) {
+                return `${minutes}m ${seconds % 60}s`;
+            } else {
+                return `${seconds}s`;
+            }
+        }
+        
+        function formatTime(date) {
+            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        
+        function formatDate(date) {
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            if (date.toDateString() === today.toDateString()) {
+                return 'Today';
+            } else if (date.toDateString() === yesterday.toDateString()) {
+                return 'Yesterday';
+            } else {
+                return date.toLocaleDateString();
+            }
+        }
+        
+        function clearCallLogs() {
+            if (callLogs.length === 0) {
+                return;
+            }
+            
+            if (confirm('Are you sure you want to clear all call logs?')) {
+                callLogs = [];
+                updateCallLogsDisplay();
+                saveCallLogsToStorage();
+            }
+        }
+        
+        function saveCallLogsToStorage() {
+            try {
+                console.log('Call logs saved to memory');
+            } catch (error) {
+                console.error('Error saving call logs:', error);
+            }
+        }
+        
+        function loadCallLogsFromStorage() {
+            try {
+                callLogs = [];
+                updateCallLogsDisplay();
+            } catch (error) {
+                console.error('Error loading call logs:', error);
+            }
         }
         
         async function loadCallHistory() {
@@ -467,10 +1059,12 @@
                 
                 // Convert to our format
                 const historyLogs = calls.map(call => ({
+                    id: call.id || Date.now() + Math.random(),
                     number: call.to,
                     status: call.status,
                     startTime: new Date(call.startTime),
-                    endTime: call.endTime ? new Date(call.endTime) : null
+                    endTime: call.endTime ? new Date(call.endTime) : null,
+                    duration: call.endTime ? new Date(call.endTime) - new Date(call.startTime) : 0
                 }));
                 
                 callLogs = [...callLogs, ...historyLogs];
@@ -488,6 +1082,16 @@
                     makeCall();
                 }
             });
+            
+            // Handle Enter key in custom country code input
+            document.getElementById('customCountryCode').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('phoneNumber').focus();
+                }
+            });
+            
+            // Load call logs from storage
+            loadCallLogsFromStorage();
         });
         
         // Initialize when page loads
@@ -499,6 +1103,24 @@
                 console.log('Page hidden, call may be affected');
             }
         });
+        
+        // Handle window resize for responsive design
+        window.addEventListener('resize', function() {
+            // Adjust layout if needed
+            const container = document.querySelector('.container');
+            if (window.innerWidth < 768) {
+                container.style.maxWidth = '100%';
+            } else {
+                container.style.maxWidth = '480px';
+            }
+        });
+        
+        // Auto-refresh call logs every 30 seconds
+        setInterval(function() {
+            if (callLogs.length > 0) {
+                updateCallLogsDisplay();
+            }
+        }, 30000);
     </script>
 </body>
 </html>
